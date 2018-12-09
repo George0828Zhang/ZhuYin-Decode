@@ -1,26 +1,28 @@
 #!/usr/bin/env python3
-
+import sys
 import codecs
 
 table = {}
 single = []
 
 if __name__ == "__main__":
-	with codecs.open("Big5-ZhuYin.map", "r", "Big5-hkscs", "replace") as filobj:
+	with codecs.open(sys.argv[1], "r", "Big5-hkscs", "replace") as filobj:
 		for line in filobj:
 			# print(line)
 			wrd = line[0]
 			single.append(wrd)
-			for (i,seg) in enumerate(line.split()):
-				if line[i-1] in [wrd, '/', ' ', None]:
-					punc = seg[0]
-					if punc in table:
-						if wrd not in table[punc]:
-							table[punc].append(wrd)
-					else:
-						table[punc] = [wrd]
+			# wrd seg/seg/seg
+			# seg = punc-?-?
+			for seg in line[1:].strip().split('/'):
+				# print(seg)
+				punc = seg[0]
+				if punc in table:
+					if wrd not in table[punc]:
+						table[punc].append(wrd)
+				else:
+					table[punc] = [wrd]
 			# print(st[0])
-	of = open('ZhuYin-Big5.map', 'w', encoding="Big5-hkscs")
+	of = open(sys.argv[2], 'w', encoding="Big5-hkscs")
 
 	for punc in table:
 		of.write(punc+"\t")
