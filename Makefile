@@ -3,7 +3,7 @@
 SRIPATH ?= /data/DSP_HW3/103_2/srilm-1.5.10
 MACHINE_TYPE ?= i686-m64
 LM ?= bigram.lm
-
+LM3 ?= trigram.lm
 
 CXX = g++
 CXXFLAGS = -O3 -I$(SRIPATH)/include -w --std=c++11
@@ -14,7 +14,7 @@ SRC = mydisambig.cpp
 OBJ = $(SRC:.cpp=.o)
 TO = ZhuYin-Big5.map
 FROM = Big5-ZhuYin.map
-LM3 = trigram.lm
+
 .PHONY: all clean map run
 
 all: $(TARGET)
