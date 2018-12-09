@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <cstdio>
 #include "Ngram.h"
@@ -27,10 +26,27 @@ int main(int argc, char** argv){
 		cerr << "Input format: ./disambig -text [text] -map [map] -lm [lm] -order [ord]" << endl;
 		return 1;
 	}
-	char* textfile = argv[2];
-	char* mapfile = argv[4];
-	char* lmfile = argv[6];
-	int ngram_order = argv[8][0]-'0';
+	char* textfile, *mapfile, *lmfile;
+	int ngram_order;
+	for(int i = 1; i < 5; i++){
+		if(!strcmp(argv[i*2-1], "-text")){
+			textfile = argv[2*i];
+		}else if(!strcmp(argv[i*2-1], "-map")){
+			mapfile = argv[2*i];
+		}else if(!strcmp(argv[i*2-1], "-lm")){
+			lmfile = argv[2*i];
+		}else if(!strcmp(argv[i*2-1], "-order")){
+			ngram_order = argv[2*i][0]-'0';
+			if(ngram_order!=2 && ngram_order!=3){
+				ngram_order = 2;
+				cerr << "Warning: order " << argv[i*2] << "not supported. Defaulted to 2." << endl;
+			}
+		}else{
+			cerr << "Input format: ./disambig -text [text] -map [map] -lm [lm] -order [ord]" << endl;
+			cerr << "Cannot understand option: " << argv[i*2-1] << endl;
+			return 1;
+		}
+	}
 
 	// initialize language model
 	Vocab voc;
