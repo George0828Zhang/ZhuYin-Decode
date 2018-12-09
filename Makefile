@@ -3,7 +3,7 @@
 SRIPATH ?= /data/DSP_HW3/103_2/srilm-1.5.10
 MACHINE_TYPE ?= i686-m64
 LM ?= bigram.lm
-LM3 ?= trigram.lm
+ORD ?= 2
 
 CXX = g++
 CXXFLAGS = -O3 -I$(SRIPATH)/include -w --std=c++11
@@ -26,17 +26,23 @@ $(TARGET): $(OBJ) -loolm -ldstruct -lmisc
 	$(CXX) $(CXXFLAGS) -c $<
 run:
 	@#TODO How to run your code toward different txt? 
-	@echo "Order: 2"
+	@echo "Order: ${ORD}"
 	@for i in $(shell seq 1 10) ; do \
 	    echo "Running $$i.txt"; \
-	    ./mydisambig -text testdata/$$i.txt -map $(TO) -lm $(LM) -order 2 > result2/$$i.txt; \
+	    ./mydisambig -text testdata/$$i.txt -map $(TO) -lm $(LM) -order $(ORD) > result2/$$i.txt; \
 	done;
-tri:
+exp:
+	./mydisambig -text testdata/example.txt -map $(TO) -lm $(LM) -order $(ORD) > expout2.txt;
+	disambig -text testdata/example.txt -map $(TO) -lm $(LM) -order $(ORD) > expout1.txt;
+	# diff expout1.txt testdata/example_ans.txt
+	diff expout1.txt expout2.txt
+	rm expout1.txt expout2.txt
+ans:
 	@#TODO How to run your code toward different txt? 
-	@echo "Order: 3"
+	@echo "Order: ${ORD}"
 	@for i in $(shell seq 1 10) ; do \
 	    echo "Running $$i.txt"; \
-	    ./mydisambig -text testdata/$$i.txt -map $(TO) -lm $(LM3) -order 3 > result2/$$i.txt; \
+	    disambig -text testdata/$$i.txt -map $(TO) -lm $(LM) -order $(ORD) > result1/$$i.txt; \
 	done;
 map:
 	@#TODO How to map?

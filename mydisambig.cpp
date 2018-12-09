@@ -74,7 +74,7 @@ int main(int argc, char** argv){
 		// run viterbi here
 		
 		VocabString out[MAX_T];
-		if(ngram_order==2)
+		if(numWords < 3 || ngram_order==2)
 			disambig(out, sentence, numWords, voc, lm);
 		else
 			disambig3(out, sentence, numWords, voc, lm);
@@ -91,6 +91,10 @@ int main(int argc, char** argv){
 
 int getMyIndex(VocabString c){
 	return lmap.find((-c[0])*256 + c[1] + 128)->second;
+}
+
+bool isZhuYin(VocabString c){
+	return c[0]==-93 && ((c[1]>=116 && c[1]<=126) || c[1]>=-95 && c[1]<=-70);
 }
 
 
@@ -374,24 +378,6 @@ void disambig3(VocabString* outseq, VocabString* sentence, int numWords, Vocab& 
 
 		outseq[t] = wdlookup[k_index][best_k+1];
 	}
-
-	// k_index = v_index[numWords-3];
-
-	// outseq[numWords-1] = wdlookup[i_index][best_i+1];
-	// outseq[numWords-2] = wdlookup[j_index][best_j+1];
-	// outseq[numWords-3] = wdlookup[k_index][best_k+1];
-
-	// for(int t = numWords-4; t >= 0; t--){
-	// 	i_index = v_index[t+2];
-	// 	j_index = v_index[t+1];
-	// 	k_index = v_index[t];
-
-	// 	best_i = best_j;
-	// 	best_j = best_k;
-	// 	best_k = phi_k[t+2][best_i][best_j];
-
-	// 	outseq[t] = wdlookup[k_index][best_k+1];
-	// }
 
 
 	// dealloc
